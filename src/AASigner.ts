@@ -446,15 +446,15 @@ export class AASigner extends Signer {
     transaction: Deferrable<TransactionRequest>
   ): Promise<TransactionResponse> {
     const userOp = await this._createUserOperation(transaction);
-    userOp.preVerificationGas = 45000;
     console.log(userOp);
     // get response BEFORE sending request: the response waits for events, which might be triggered before the actual send returns.
-    // const reponse = await this.userEventResponse(userOp);
+    const eventResponse = await this.userEventResponse(userOp);
     // console.log(reponse);
-    const response = await this.sendUserOp(userOp);
+    await this.sendUserOp(userOp);
     console.log("done!");
-    if (response) return response;
-    else throw Error("error");
+    return eventResponse;
+    // if (response) return response;
+    // else throw Error("error");
   }
 
   async syncAccount(): Promise<void> {

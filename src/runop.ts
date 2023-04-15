@@ -18,7 +18,7 @@ import { providers } from "ethers";
   console.log("net=", hre.network.name);
   const aa_url = process.env.AA_URL;
 
-  const entryPointAddress = "0x0576a174D229E3cFA37253523E645A78A0C91B57";
+  const entryPointAddress = "0x0576a174D229E3cFA37253523E645A78A0C91B57"; // v4
 
   const provider = ethers.provider;
   const ethersSigner = provider.getSigner();
@@ -61,7 +61,7 @@ import { providers } from "ethers";
     index
   );
   // connect to pre-deployed account
-  const accountAddress = "0x897c2d8f905ab34e85f2db6c57ef0f7dba2828d3";
+  const accountAddress = "0x7c9520cf619c13d734d85f8c8529b2c2933ade6d"; // TODO
   await aasigner.connectAccountAddress(accountAddress);
   const myAddress = await aasigner.getAddress();
   console.log("aasigner: ", myAddress);
@@ -101,10 +101,14 @@ import { providers } from "ethers";
   console.log("current owner: ", account_owner);
 
   const marketplace = AccountMarketplace__factory.connect(
-    "0x93e27D1750C7bbd6016EE0C86E72997c6c61eB44",
+    "0x0dE2c7F433cbd79C2B6E19fc2dfCeBc335b165cc", // TODO
     aasigner
   );
-  const ret = await marketplace.register(myAddress);
+
+  const aa = await marketplace.accountRegister(myAddress);
+  console.log(aa);
+
+  const ret = await marketplace.register(myAddress); // TODO
   console.log("waiting for mine, hash (reqId)=", ret.hash);
   const rcpt = await ret.wait();
   const netname = await provider.getNetwork().then((net) => net.name);
