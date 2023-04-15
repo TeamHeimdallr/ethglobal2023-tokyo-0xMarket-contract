@@ -2,6 +2,7 @@
 pragma solidity ^0.8.2;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 interface IAccount {
     function owner() external returns (address);
@@ -9,7 +10,26 @@ interface IAccount {
     function changeOwner(address) external;
 }
 
+interface IPUSHCommInterface {
+    function subscribe(address _channel) external returns (bool);
+
+    function isUserSubscribed(
+        address _channel,
+        address _user
+    ) external view returns (bool);
+
+    function sendNotification(
+        address _channel,
+        address _recipient,
+        bytes memory _identity
+    ) external returns (bool);
+}
+
 contract AccountMarketplace {
+    address private EPNS_COMM_ADDRESS =
+        0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa; // Goerli
+    address private EPNS_CHANNEL = 0x1884e327984E12b8ce525D2AC3B7aa08271c83f4;
+
     address tokenAddress;
     mapping(address => address) accountOwner;
     mapping(address => uint) accountPrice;
@@ -39,6 +59,7 @@ contract AccountMarketplace {
         accountOwner[account] = msg.sender;
     }
 
+    // The listner who wants to get alarmed needs to subscribe the channel
     function list(address account, address receiver, uint price) external {
         require(
             accountOwner[account] == msg.sender,
@@ -83,6 +104,34 @@ contract AccountMarketplace {
 
         IAccount(account).changeOwner(msg.sender);
         emit BuyAccount(account);
+
+        if (
+            IPUSHCommInterface(EPNS_COMM_ADDRESS).isUserSubscribed(
+                EPNS_CHANNEL,
+                accountOwner[account]
+            )
+        ) {
+            // This contract needs to be delegated from the channel admin
+            IPUSHCommInterface(EPNS_COMM_ADDRESS).sendNotification(
+                EPNS_CHANNEL,
+                accountOwner[account],
+                bytes(
+                    string(
+                        abi.encodePacked(
+                            "0",
+                            "+",
+                            "3",
+                            "+",
+                            "Your Account has been Sold!",
+                            "+",
+                            Strings.toHexString(msg.sender),
+                            " is sold with the price ",
+                            Strings.toString(accountPrice[account])
+                        )
+                    )
+                )
+            );
+        }
 
         // Reset mappings
         accountOwner[account] = msg.sender;
