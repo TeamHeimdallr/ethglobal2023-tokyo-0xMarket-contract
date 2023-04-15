@@ -8,7 +8,7 @@ async function main() {
 
     console.log("from:", from);
     const tokenAddress = ethers.utils.getAddress(
-      "0xd4290c61222dc39dd61579b00b9f2509df9cf232"
+      "0x68035dd1dfabf2c682f6e1f3eb56db0b26c2e4d5"
     );
     const factory = await ethers.getContractFactory("AccountMarketplace");
     const ret = await factory.deploy(tokenAddress);
