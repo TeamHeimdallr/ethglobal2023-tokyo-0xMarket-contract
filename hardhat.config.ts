@@ -31,6 +31,14 @@ const config: HardhatUserConfig = {
       url: "https://rpc.ankr.com/eth_goerli",
       accounts: [privateKey],
     },
+    mumbai: {
+      url: "https://rpc.ankr.com/polygon_mumbai",
+      accounts: [privateKey],
+    },
+    scrollalpha: {
+      url: "https://alpha-rpc.scroll.io/l2",
+      accounts: [privateKey],
+    }
   },
 };
 

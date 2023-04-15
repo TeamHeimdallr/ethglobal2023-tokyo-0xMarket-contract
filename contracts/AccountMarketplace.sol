@@ -27,7 +27,7 @@ interface IPUSHCommInterface {
 
 contract AccountMarketplace {
     address private EPNS_COMM_ADDRESS =
-        0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa; // Goerli
+        0xb3971BCef2D791bc4027BbfedFb47319A4AAaaAa; // Goerli, Mumbai
     address private EPNS_CHANNEL = 0x1884e327984E12b8ce525D2AC3B7aa08271c83f4;
 
     address tokenAddress;
@@ -106,6 +106,7 @@ contract AccountMarketplace {
         emit BuyAccount(account);
 
         if (
+            block.chainid != 534353 && // EPNS doesn't support Scroll Alpha
             IPUSHCommInterface(EPNS_COMM_ADDRESS).isUserSubscribed(
                 EPNS_CHANNEL,
                 accountOwner[account]
