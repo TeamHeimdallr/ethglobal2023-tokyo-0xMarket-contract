@@ -1,5 +1,8 @@
 {
   "name": "contract-account",
+  "scripts": {
+    "runop": "hardhat run src/runop.ts "
+  },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@typechain/ethers-v5": "^10.1.0",
