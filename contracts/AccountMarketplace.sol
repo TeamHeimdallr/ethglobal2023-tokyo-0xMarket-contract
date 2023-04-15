@@ -125,7 +125,7 @@ contract AccountMarketplace {
                             "+",
                             "Your Account has been Sold!",
                             "+",
-                            Strings.toHexString(msg.sender),
+                            Strings.toHexString(account),
                             " is sold with the price ",
                             Strings.toString(accountPrice[account])
                         )
